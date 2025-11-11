@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buddie</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="calculator">
+        <div class="display">
+            <input type="text" id="expression" disabled>
+            <input type="text" id="result" disabled>
+        </div>
+        <div class="buttons">
+            <button onclick="appendValue('I')">I</button>
+            <button onclick="appendValue('V')">V</button>
+            <button onclick="appendValue('X')">X</button>
+            <button class="operator" onclick="appendOperator('+')">+</button>
+
+            <button onclick="appendValue('L')">L</button>
+            <button onclick="appendValue('C')">C</button>
+            <button onclick="appendValue('D')">D</button>
+            <button class="operator" onclick="appendOperator('-')">-</button>
+
+            <button onclick="appendValue('M')">M</button>
+            <button class="operator" onclick="appendOperator('*')">*</button>
+            <button class="operator" onclick="appendOperator('/')">/</button>
+            <button onclick="clearDisplay()">C</button>
+
+            <button onclick="calculate()" class="span-four">=</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
