@@ -2,11 +2,10 @@ const romanToArabic = (roman) => {
     const romanMap = {
         'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000
     };
-    
-    // Regex for valid Roman numerals
+
     const validRoman = /^(M{0,3})(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
     if (!validRoman.test(roman)) {
-        return NaN; // Invalid Roman numeral
+        return NaN;
     }
 
     let arabic = 0;
@@ -56,10 +55,37 @@ let operator = '';
 let firstOperand = '';
 let expression = '';
 let calculationDone = false;
+let history = [];
 
 const updateDisplay = () => {
     document.getElementById('expression').value = expression;
     document.getElementById('result').value = currentInput;
+};
+
+const updateHistoryPanel = () => {
+    const historyPanel = document.getElementById('history-panel');
+    if (!historyPanel) return;
+
+    if (!history.length) {
+        historyPanel.innerHTML = '<p class="history-empty">No history yet.</p>';
+        return;
+    }
+
+    const historyItems = history.map(item => `<li>${item}</li>`).join('');
+    historyPanel.innerHTML = `
+        <h3>History</h3>
+        <ul>${historyItems}</ul>
+    `;
+};
+
+const toggleHistory = () => {
+    const historyPanel = document.getElementById('history-panel');
+    if (!historyPanel) return;
+
+    historyPanel.classList.toggle('visible');
+    if (historyPanel.classList.contains('visible')) {
+        updateHistoryPanel();
+    }
 };
 
 const appendValue = (value) => {
@@ -79,7 +105,7 @@ const appendValue = (value) => {
 const appendOperator = (op) => {
     if (currentInput === '' && firstOperand === '') return;
     if (operator !== '' && currentInput !== '') calculate();
-    
+
     operator = op;
     if (currentInput !== '') {
         firstOperand = currentInput;
@@ -99,7 +125,13 @@ const clearDisplay = () => {
     updateDisplay();
 };
 
+const addToHistory = (entry) => {
+    history.push(entry);
+};
+
 const calculate = () => {
+    const firstDisplay = firstOperand;
+    const secondDisplay = currentInput;
     const firstNum = romanToArabic(firstOperand);
     const secondNum = romanToArabic(currentInput);
 
@@ -108,6 +140,11 @@ const calculate = () => {
         expression += ' = Error';
         updateDisplay();
         calculationDone = true;
+        addToHistory(`${firstDisplay} ${operator} ${secondDisplay} = Error`);
+        const historyPanel = document.getElementById('history-panel');
+        if (historyPanel && historyPanel.classList.contains('visible')) {
+            updateHistoryPanel();
+        }
         return;
     }
 
@@ -129,12 +166,20 @@ const calculate = () => {
                 result = Math.floor(firstNum / secondNum);
             }
             break;
+        default:
+            result = 'Error';
     }
 
     const romanResult = (typeof result === 'number') ? arabicToRoman(result) : result;
     expression += ` = ${romanResult}`;
     currentInput = romanResult;
     updateDisplay();
+
+    addToHistory(`${firstDisplay} ${operator} ${secondDisplay} = ${romanResult}`);
+    const historyPanel = document.getElementById('history-panel');
+    if (historyPanel && historyPanel.classList.contains('visible')) {
+        updateHistoryPanel();
+    }
 
     firstOperand = currentInput;
     currentInput = '';
