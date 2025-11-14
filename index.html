@@ -12,6 +12,10 @@
             <input type="text" id="expression" disabled>
             <input type="text" id="result" disabled>
         </div>
+        <div class="history-controls">
+            <button id="historyButton" class="history-button">History</button>
+            <button id="clearHistoryButton" class="clear-history-button" title="Clear calculation history">Clear</button>
+        </div>
         <div class="buttons">
             <button onclick="appendValue('I')">I</button>
             <button onclick="appendValue('V')">V</button>
@@ -29,6 +33,10 @@
             <button onclick="clearDisplay()">C</button>
 
             <button onclick="calculate()" class="span-four">=</button>
+        </div>
+        <div id="historyPanel" class="history-panel hidden" aria-live="polite">
+            <h3>Calculation History</h3>
+            <ul id="historyList"></ul>
         </div>
     </div>
     <script src="script.js"></script>

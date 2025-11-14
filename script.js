@@ -2,7 +2,7 @@ const romanToArabic = (roman) => {
     const romanMap = {
         'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000
     };
-    
+
     // Regex for valid Roman numerals
     const validRoman = /^(M{0,3})(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
     if (!validRoman.test(roman)) {
@@ -56,6 +56,7 @@ let operator = '';
 let firstOperand = '';
 let expression = '';
 let calculationDone = false;
+const historyEntries = [];
 
 const updateDisplay = () => {
     document.getElementById('expression').value = expression;
@@ -79,7 +80,7 @@ const appendValue = (value) => {
 const appendOperator = (op) => {
     if (currentInput === '' && firstOperand === '') return;
     if (operator !== '' && currentInput !== '') calculate();
-    
+
     operator = op;
     if (currentInput !== '') {
         firstOperand = currentInput;
@@ -99,9 +100,42 @@ const clearDisplay = () => {
     updateDisplay();
 };
 
+const renderHistory = () => {
+    const historyList = document.getElementById('historyList');
+    historyList.innerHTML = '';
+
+    if (historyEntries.length === 0) {
+        const emptyItem = document.createElement('li');
+        emptyItem.textContent = 'No calculations yet';
+        historyList.appendChild(emptyItem);
+        return;
+    }
+
+    historyEntries.slice().reverse().forEach(entry => {
+        const li = document.createElement('li');
+        li.textContent = entry;
+        historyList.appendChild(li);
+    });
+};
+
+const toggleHistoryPanel = () => {
+    const panel = document.getElementById('historyPanel');
+    panel.classList.toggle('hidden');
+};
+
+const clearHistory = () => {
+    historyEntries.length = 0;
+    renderHistory();
+};
+
 const calculate = () => {
+    if (firstOperand === '' || currentInput === '' || operator === '') {
+        return;
+    }
+
+    const secondOperand = currentInput;
     const firstNum = romanToArabic(firstOperand);
-    const secondNum = romanToArabic(currentInput);
+    const secondNum = romanToArabic(secondOperand);
 
     if (isNaN(firstNum) || isNaN(secondNum)) {
         currentInput = 'Error';
@@ -136,8 +170,19 @@ const calculate = () => {
     currentInput = romanResult;
     updateDisplay();
 
+    const historyLabel = `${firstOperand} ${operator} ${secondOperand} = ${romanResult}`;
+    historyEntries.push(historyLabel);
+    renderHistory();
+
     firstOperand = currentInput;
     currentInput = '';
     operator = '';
     calculationDone = true;
 };
+
+// Attach event listeners after DOM content is ready
+window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('historyButton').addEventListener('click', toggleHistoryPanel);
+    document.getElementById('clearHistoryButton').addEventListener('click', clearHistory);
+    renderHistory();
+});
