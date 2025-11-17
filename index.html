@@ -12,6 +12,13 @@
             <input type="text" id="expression" disabled>
             <input type="text" id="result" disabled>
         </div>
+        <div class="history-section">
+            <button class="history-toggle" onclick="toggleHistory()">History</button>
+            <div id="historyPanel" class="history-panel">
+                <ul id="historyList"></ul>
+                <button class="clear-history" onclick="clearHistory()">Clear History</button>
+            </div>
+        </div>
         <div class="buttons">
             <button onclick="appendValue('I')">I</button>
             <button onclick="appendValue('V')">V</button>

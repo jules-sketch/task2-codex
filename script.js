@@ -56,6 +56,9 @@ let operator = '';
 let firstOperand = '';
 let expression = '';
 let calculationDone = false;
+let historyEntries = [];
+
+const HISTORY_KEY = 'buddieCalculatorHistory';
 
 const updateDisplay = () => {
     document.getElementById('expression').value = expression;
@@ -100,13 +103,20 @@ const clearDisplay = () => {
 };
 
 const calculate = () => {
+    if (firstOperand === '' || operator === '' || currentInput === '') {
+        return;
+    }
+
+    const secondOperand = currentInput;
     const firstNum = romanToArabic(firstOperand);
-    const secondNum = romanToArabic(currentInput);
+    const secondNum = romanToArabic(secondOperand);
 
     if (isNaN(firstNum) || isNaN(secondNum)) {
+        const historyEntry = `${firstOperand} ${operator} ${secondOperand} = Error`;
+        expression = historyEntry;
         currentInput = 'Error';
-        expression += ' = Error';
         updateDisplay();
+        addToHistory(historyEntry);
         calculationDone = true;
         return;
     }
@@ -132,12 +142,71 @@ const calculate = () => {
     }
 
     const romanResult = (typeof result === 'number') ? arabicToRoman(result) : result;
-    expression += ` = ${romanResult}`;
+    const historyEntry = `${firstOperand} ${operator} ${secondOperand} = ${romanResult}`;
+    expression = historyEntry;
     currentInput = romanResult;
     updateDisplay();
+
+    addToHistory(historyEntry);
 
     firstOperand = currentInput;
     currentInput = '';
     operator = '';
     calculationDone = true;
 };
+
+const addToHistory = (entry) => {
+    historyEntries.push(entry);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(historyEntries));
+    renderHistory();
+};
+
+const renderHistory = () => {
+    const historyList = document.getElementById('historyList');
+    if (!historyList) return;
+
+    historyList.innerHTML = '';
+
+    if (historyEntries.length === 0) {
+        const emptyItem = document.createElement('li');
+        emptyItem.className = 'empty-history';
+        emptyItem.textContent = 'No history yet';
+        historyList.appendChild(emptyItem);
+        return;
+    }
+
+    for (let i = historyEntries.length - 1; i >= 0; i--) {
+        const item = document.createElement('li');
+        item.textContent = historyEntries[i];
+        historyList.appendChild(item);
+    }
+};
+
+const toggleHistory = () => {
+    const historyPanel = document.getElementById('historyPanel');
+    if (!historyPanel) return;
+
+    historyPanel.classList.toggle('visible');
+};
+
+const clearHistory = () => {
+    historyEntries = [];
+    localStorage.removeItem(HISTORY_KEY);
+    renderHistory();
+};
+
+const loadHistory = () => {
+    const storedHistory = localStorage.getItem(HISTORY_KEY);
+    if (storedHistory) {
+        try {
+            historyEntries = JSON.parse(storedHistory);
+        } catch (error) {
+            historyEntries = [];
+        }
+    }
+    renderHistory();
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadHistory();
+});
