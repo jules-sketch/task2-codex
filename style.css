@@ -19,6 +19,24 @@ body {
     margin-bottom: 20px;
 }
 
+.display-row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+    margin-bottom: 20px;
+}
+
+.history-btn {
+    width: 120px;
+    background-color: #2f71c1;
+    color: #f0f8ff;
+    font-weight: bold;
+}
+
+.history-btn:hover {
+    background-color: #245b9a;
+}
+
 #expression {
     width: 100%;
     padding: 5px 10px;
@@ -71,4 +89,58 @@ button:hover {
 
 .span-four {
     grid-column: span 4;
+}
+
+.history-panel {
+    margin-top: 15px;
+    background-color: #d3e5f7;
+    border: 1px solid #5b92e5;
+    border-radius: 8px;
+    padding: 10px;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.history-panel.show {
+    display: block;
+}
+
+.history-panel h3 {
+    margin: 0 0 10px;
+    color: #000080;
+}
+
+.history-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.history-panel li {
+    margin: 0;
+}
+
+.history-entry {
+    width: 100%;
+    text-align: left;
+    background-color: #5b92e5;
+    color: #f0f8ff;
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.history-entry:hover {
+    background-color: #4a77d4;
+}
+
+.empty-history {
+    color: #4a77d4;
+    text-align: center;
+    font-style: italic;
 }

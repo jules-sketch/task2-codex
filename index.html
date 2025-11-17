@@ -8,9 +8,12 @@
 </head>
 <body>
     <div class="calculator">
-        <div class="display">
-            <input type="text" id="expression" disabled>
-            <input type="text" id="result" disabled>
+        <div class="display-row">
+            <div class="display">
+                <input type="text" id="expression" disabled>
+                <input type="text" id="result" disabled>
+            </div>
+            <button class="history-btn" onclick="toggleHistory()">History</button>
         </div>
         <div class="buttons">
             <button onclick="appendValue('I')">I</button>
@@ -29,6 +32,10 @@
             <button onclick="clearDisplay()">C</button>
 
             <button onclick="calculate()" class="span-four">=</button>
+        </div>
+        <div class="history-panel" id="history-panel">
+            <h3>Calculation History</h3>
+            <ul id="history-list"></ul>
         </div>
     </div>
     <script src="script.js"></script>
