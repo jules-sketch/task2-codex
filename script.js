@@ -56,10 +56,30 @@ let operator = '';
 let firstOperand = '';
 let expression = '';
 let calculationDone = false;
+let history = [];
 
 const updateDisplay = () => {
     document.getElementById('expression').value = expression;
     document.getElementById('result').value = currentInput;
+};
+
+const renderHistory = () => {
+    const historyList = document.getElementById('history-list');
+    historyList.innerHTML = '';
+
+    if (history.length === 0) {
+        const emptyItem = document.createElement('li');
+        emptyItem.textContent = 'No calculations yet';
+        emptyItem.classList.add('empty');
+        historyList.appendChild(emptyItem);
+        return;
+    }
+
+    history.forEach((entry) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = entry;
+        historyList.appendChild(listItem);
+    });
 };
 
 const appendValue = (value) => {
@@ -132,12 +152,28 @@ const calculate = () => {
     }
 
     const romanResult = (typeof result === 'number') ? arabicToRoman(result) : result;
+    const historyEntry = `${firstOperand} ${operator} ${currentInput} = ${romanResult}`;
     expression += ` = ${romanResult}`;
     currentInput = romanResult;
     updateDisplay();
+
+    history.unshift(historyEntry);
+    renderHistory();
 
     firstOperand = currentInput;
     currentInput = '';
     operator = '';
     calculationDone = true;
 };
+
+const toggleHistory = () => {
+    const historyContainer = document.getElementById('history');
+    historyContainer.classList.toggle('hidden');
+};
+
+const clearHistory = () => {
+    history = [];
+    renderHistory();
+};
+
+renderHistory();

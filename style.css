@@ -72,3 +72,58 @@ button:hover {
 .span-four {
     grid-column: span 4;
 }
+
+.secondary {
+    background-color: #f0f8ff;
+    color: #000080;
+    border: 1px solid #0000cd;
+}
+
+.secondary:hover {
+    background-color: #e0e8f0;
+}
+
+.history {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f0f8ff;
+    border: 1px solid #00008b;
+    border-radius: 8px;
+}
+
+.history.hidden {
+    display: none;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+#history-list li {
+    padding: 8px;
+    background-color: #e6f2ff;
+    border-radius: 4px;
+    color: #000080;
+    border: 1px solid #b0c4de;
+}
+
+#history-list li.empty {
+    text-align: center;
+    font-style: italic;
+    color: #4a77d4;
+    border-style: dashed;
+}
