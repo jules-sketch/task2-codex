@@ -56,6 +56,7 @@ let operator = '';
 let firstOperand = '';
 let expression = '';
 let calculationDone = false;
+let historyEntries = [];
 
 const updateDisplay = () => {
     document.getElementById('expression').value = expression;
@@ -100,14 +101,20 @@ const clearDisplay = () => {
 };
 
 const calculate = () => {
+    if (firstOperand === '' || operator === '' || currentInput === '') {
+        return;
+    }
+
+    const secondOperand = currentInput;
     const firstNum = romanToArabic(firstOperand);
-    const secondNum = romanToArabic(currentInput);
+    const secondNum = romanToArabic(secondOperand);
 
     if (isNaN(firstNum) || isNaN(secondNum)) {
         currentInput = 'Error';
         expression += ' = Error';
         updateDisplay();
         calculationDone = true;
+        addToHistory(`${firstOperand} ${operator} ${secondOperand}`, 'Error');
         return;
     }
 
@@ -140,4 +147,48 @@ const calculate = () => {
     currentInput = '';
     operator = '';
     calculationDone = true;
+    addToHistory(`${expression.split(' = ')[0]}`, romanResult);
+};
+
+const addToHistory = (expr, result) => {
+    historyEntries.unshift({ expression: expr, result });
+    renderHistory();
+};
+
+const renderHistory = () => {
+    const historyList = document.getElementById('history-list');
+    historyList.innerHTML = '';
+
+    if (historyEntries.length === 0) {
+        const emptyItem = document.createElement('li');
+        emptyItem.textContent = 'No calculations yet';
+        emptyItem.classList.add('empty-history');
+        historyList.appendChild(emptyItem);
+        return;
+    }
+
+    historyEntries.forEach(({ expression: expr, result }) => {
+        const item = document.createElement('li');
+        const button = document.createElement('button');
+        button.className = 'history-entry';
+        button.textContent = `${expr} = ${result}`;
+        button.addEventListener('click', () => loadHistoryEntry(expr, result));
+        item.appendChild(button);
+        historyList.appendChild(item);
+    });
+};
+
+const loadHistoryEntry = (expr, result) => {
+    expression = `${expr} = ${result}`;
+    currentInput = result;
+    firstOperand = result;
+    operator = '';
+    calculationDone = true;
+    updateDisplay();
+};
+
+const toggleHistory = () => {
+    const panel = document.getElementById('history-panel');
+    panel.classList.toggle('show');
+    renderHistory();
 };
