@@ -13,6 +13,7 @@ body {
     padding: 20px;
     background-color: #add8e6;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 360px;
 }
 
 .display {
@@ -49,12 +50,13 @@ body {
 
 button {
     padding: 20px;
-    font-size: 1.5em;
+    font-size: 1.2em;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     background-color: #4682b4;
     color: white;
+    transition: background-color 0.2s ease;
 }
 
 button:hover {
@@ -71,4 +73,50 @@ button:hover {
 
 .span-four {
     grid-column: span 4;
+}
+
+.span-two {
+    grid-column: span 2;
+}
+
+.history {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f0f8ff;
+    border: 1px solid #00008b;
+    border-radius: 5px;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.history h3 {
+    margin: 0 0 10px;
+    color: #000080;
+}
+
+.history ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.history li + li {
+    margin-top: 8px;
+}
+
+.history-item {
+    width: 100%;
+    text-align: left;
+    font-size: 1em;
+    padding: 10px;
+    background-color: #e0e8f0;
+    color: #000080;
+}
+
+.history-item:hover {
+    background-color: #d0d8e8;
+}
+
+.hidden {
+    display: none;
 }

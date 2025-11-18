@@ -2,7 +2,7 @@ const romanToArabic = (roman) => {
     const romanMap = {
         'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000
     };
-    
+
     // Regex for valid Roman numerals
     const validRoman = /^(M{0,3})(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
     if (!validRoman.test(roman)) {
@@ -56,6 +56,7 @@ let operator = '';
 let firstOperand = '';
 let expression = '';
 let calculationDone = false;
+let history = [];
 
 const updateDisplay = () => {
     document.getElementById('expression').value = expression;
@@ -79,7 +80,7 @@ const appendValue = (value) => {
 const appendOperator = (op) => {
     if (currentInput === '' && firstOperand === '') return;
     if (operator !== '' && currentInput !== '') calculate();
-    
+
     operator = op;
     if (currentInput !== '') {
         firstOperand = currentInput;
@@ -99,15 +100,59 @@ const clearDisplay = () => {
     updateDisplay();
 };
 
+const addToHistory = (entry) => {
+    history.unshift(entry);
+    renderHistory();
+};
+
+const renderHistory = () => {
+    const historyList = document.getElementById('history-list');
+    historyList.innerHTML = '';
+
+    history.forEach((item, index) => {
+        const listItem = document.createElement('li');
+        const button = document.createElement('button');
+        button.textContent = `${item.expression} = ${item.result}`;
+        button.classList.add('history-item');
+        button.setAttribute('aria-label', `History item ${index + 1}: ${item.expression} equals ${item.result}`);
+        button.onclick = () => loadHistoryItem(item);
+        listItem.appendChild(button);
+        historyList.appendChild(listItem);
+    });
+};
+
+const loadHistoryItem = (item) => {
+    expression = `${item.expression} = ${item.result}`;
+    currentInput = item.result;
+    firstOperand = item.result;
+    operator = '';
+    calculationDone = true;
+    updateDisplay();
+};
+
+const toggleHistory = () => {
+    const panel = document.getElementById('history-panel');
+    panel.classList.toggle('hidden');
+};
+
+const clearHistory = () => {
+    history = [];
+    renderHistory();
+};
+
 const calculate = () => {
-    const firstNum = romanToArabic(firstOperand);
-    const secondNum = romanToArabic(currentInput);
+    const firstOperandCopy = firstOperand;
+    const currentInputCopy = currentInput;
+
+    const firstNum = romanToArabic(firstOperandCopy);
+    const secondNum = romanToArabic(currentInputCopy);
 
     if (isNaN(firstNum) || isNaN(secondNum)) {
         currentInput = 'Error';
-        expression += ' = Error';
+        expression = `${firstOperandCopy} ${operator} ${currentInputCopy} = Error`;
         updateDisplay();
         calculationDone = true;
+        addToHistory({ expression: `${firstOperandCopy} ${operator} ${currentInputCopy}`.trim(), result: 'Error' });
         return;
     }
 
@@ -129,12 +174,16 @@ const calculate = () => {
                 result = Math.floor(firstNum / secondNum);
             }
             break;
+        default:
+            result = 'Error';
     }
 
     const romanResult = (typeof result === 'number') ? arabicToRoman(result) : result;
-    expression += ` = ${romanResult}`;
+    expression = `${firstOperandCopy} ${operator} ${currentInputCopy} = ${romanResult}`;
     currentInput = romanResult;
     updateDisplay();
+
+    addToHistory({ expression: `${firstOperandCopy} ${operator} ${currentInputCopy}`.trim(), result: romanResult });
 
     firstOperand = currentInput;
     currentInput = '';
