@@ -7,28 +7,45 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="calculator">
-        <div class="display">
-            <input type="text" id="expression" disabled>
-            <input type="text" id="result" disabled>
+    <div class="app">
+        <div class="tabs">
+            <button class="tab-button active" data-tab="calculator" onclick="switchTab('calculator')">Calculator</button>
+            <button class="tab-button" data-tab="history" onclick="switchTab('history')">History</button>
         </div>
-        <div class="buttons">
-            <button onclick="appendValue('I')">I</button>
-            <button onclick="appendValue('V')">V</button>
-            <button onclick="appendValue('X')">X</button>
-            <button class="operator" onclick="appendOperator('+')">+</button>
 
-            <button onclick="appendValue('L')">L</button>
-            <button onclick="appendValue('C')">C</button>
-            <button onclick="appendValue('D')">D</button>
-            <button class="operator" onclick="appendOperator('-')">-</button>
+        <div id="calculator-tab" class="tab-content active">
+            <div class="calculator">
+                <div class="display">
+                    <input type="text" id="expression" disabled>
+                    <input type="text" id="result" disabled>
+                </div>
+                <div class="buttons">
+                    <button onclick="appendValue('I')">I</button>
+                    <button onclick="appendValue('V')">V</button>
+                    <button onclick="appendValue('X')">X</button>
+                    <button class="operator" onclick="appendOperator('+')">+</button>
 
-            <button onclick="appendValue('M')">M</button>
-            <button class="operator" onclick="appendOperator('*')">*</button>
-            <button class="operator" onclick="appendOperator('/')">/</button>
-            <button onclick="clearDisplay()">C</button>
+                    <button onclick="appendValue('L')">L</button>
+                    <button onclick="appendValue('C')">C</button>
+                    <button onclick="appendValue('D')">D</button>
+                    <button class="operator" onclick="appendOperator('-')">-</button>
 
-            <button onclick="calculate()" class="span-four">=</button>
+                    <button onclick="appendValue('M')">M</button>
+                    <button class="operator" onclick="appendOperator('*')">*</button>
+                    <button class="operator" onclick="appendOperator('/')">/</button>
+                    <button onclick="clearDisplay()">C</button>
+
+                    <button onclick="calculate()" class="span-four">=</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="history-tab" class="tab-content">
+            <div class="history-controls">
+                <button class="clear-history" onclick="clearHistory()">Clear History</button>
+            </div>
+            <ul id="history-list" class="history-list"></ul>
+            <p id="history-empty" class="history-empty">No history yet. Perform a calculation to see it here.</p>
         </div>
     </div>
     <script src="script.js"></script>
